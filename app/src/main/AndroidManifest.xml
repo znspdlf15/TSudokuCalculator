@@ -20,6 +20,9 @@
         <activity android:name=".InputSudokuActivity">
         </activity>
 
+        <activity android:name=".OutputSudokuActivity">
+        </activity>
+
     </application>
 
 </manifest>
