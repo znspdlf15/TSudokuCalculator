@@ -23,6 +23,9 @@
         <activity android:name=".OutputSudokuActivity">
         </activity>
 
+        <activity android:name=".InputCameraSudokuActivity">
+        </activity>
+
     </application>
 
 </manifest>
