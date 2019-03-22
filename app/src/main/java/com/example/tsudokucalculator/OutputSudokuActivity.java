@@ -123,6 +123,58 @@ public class OutputSudokuActivity extends Activity {
         }
     }
 
+    public boolean back_tracking(sudoku_item[][] map){
+        sudoku_item[][] temp_map = new sudoku_item[9][9];
+        for ( int y = 0; y < 9; y++ ){
+            for ( int x = 0; x < 9; x++ ){
+                temp_map[y][x] = new sudoku_item();
+                temp_map[y][x].number = map[y][x].number;
+                System.arraycopy(map[y][x].able, 0, temp_map[y][x].able, 0, map[y][x].able.length);
+            }
+        }
+
+        for ( int y = 0; y < 9; y++ ){
+            for ( int x = 0; x < 9; x++ ){
+                if ( temp_map[y][x].number > 0 ) continue;
+
+                for ( int n = 1; n <= 9; n++ ) {
+                    if ( temp_map[y][x].able[n] ){
+                        temp_map[y][x].number = n;
+                        remove_able(x, y, temp_map);
+
+                        if ( y == 8 ) System.out.println(x + ", " + y + ", data: " + n);
+                        if ( back_tracking(temp_map) ){
+                            for ( int i = 0; i < 9; i++ ){
+                                for ( int j = 0; j < 9; j++ ){
+                                    map[i][j].number = temp_map[i][j].number;
+                                    System.arraycopy(temp_map[i][j].able, 0, map[i][j].able, 0, map[i][j].able.length);
+                                }
+                            }
+                            return true;
+                        }
+
+                        for ( int i = 0; i < 9; i++ ){
+                            for ( int j = 0; j < 9; j++ ){
+                                temp_map[i][j].number = map[i][j].number;
+                                System.arraycopy(map[i][j].able, 0, temp_map[i][j].able, 0, map[i][j].able.length);
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        for ( int i = 0; i < 9; i++ ){
+            for ( int j = 0; j < 9; j++ ){
+                map[i][j].number = temp_map[i][j].number;
+                System.arraycopy(temp_map[i][j].able, 0, map[i][j].able, 0, map[i][j].able.length);
+            }
+        }
+        return true;
+    }
+
     public void calculate_sudoku(int[][] sudoku){
         sudoku_item[][] items = new sudoku_item[9][9];
         for ( int y = 0; y < 9; y++ ) {
@@ -130,7 +182,6 @@ public class OutputSudokuActivity extends Activity {
                 items[y][x] = new sudoku_item();
             }
         }
-        System.out.println("initing..");
 
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 9; x++) {
@@ -167,8 +218,10 @@ public class OutputSudokuActivity extends Activity {
             }
             System.out.println("check items..");
 
-            if ( pre_count == next_count) break;
+            if ( pre_count == next_count ) break;
         }
+
+        back_tracking(items);
 
         for ( int y = 0; y < 9; y++ ){
             for ( int x = 0; x < 9; x++ ){
