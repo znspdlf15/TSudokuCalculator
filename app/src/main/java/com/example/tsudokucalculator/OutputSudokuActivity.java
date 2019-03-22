@@ -48,6 +48,81 @@ public class OutputSudokuActivity extends Activity {
 
     }
 
+    public void check_only(int nowX, int nowY, sudoku_item[][] items){
+        for ( int i = 1; i <= 9; i++ ){
+            int able_count = 0;
+
+            for ( int d = 0; d < 2; d++ ){
+                int targetX = nowX + dx[d];
+                int targetY = nowY + dy[d];
+                while ( targetX >= 0 && targetX < 9 && targetY >= 0 && targetY < 9 ){
+                    if ( items[targetY][targetX].number == i ) break;
+                    if ( !items[targetY][targetX].able[i] || items[targetY][targetX].number > 0 ){
+                        able_count++;
+                    }
+
+                    targetX = targetX + dx[d];
+                    targetY = targetY + dy[d];
+                }
+            }
+            if ( able_count == 8 ){
+                if ( items[nowY][nowX].able[i] && items[nowY][nowX].number == 0 ){
+                    items[nowY][nowX].number = i;
+                    remove_able(nowX, nowY, items);
+                    return;
+                }
+            }
+        }
+
+        for ( int i = 1; i <= 9; i++ ){
+            int able_count = 0;
+
+            for ( int d = 2; d < 4; d++ ){
+                int targetX = nowX + dx[d];
+                int targetY = nowY + dy[d];
+                while ( targetX >= 0 && targetX < 9 && targetY >= 0 && targetY < 9 ){
+                    if ( items[targetY][targetX].number == i ) break;
+                    if ( !items[targetY][targetX].able[i] || items[targetY][targetX].number > 0 ){
+                        able_count++;
+                    }
+                    targetX = targetX + dx[d];
+                    targetY = targetY + dy[d];
+                }
+            }
+            if ( able_count == 8 ){
+                if ( items[nowY][nowX].able[i] && items[nowY][nowX].number == 0 ){
+                    items[nowY][nowX].number = i;
+                    remove_able(nowX, nowY, items);
+                    return;
+                }
+            }
+        }
+
+        int initX = (nowX / 3) * 3;
+        int initY = (nowY / 3) * 3;
+        for ( int i = 1; i <= 9; i++ ){
+            int able_count = 0;
+            for ( int y = 0; y < 3; y++ ) {
+                for ( int x = 0; x < 3; x++ ) {
+                    int targetX = initX + x;
+                    int targetY = initY + y;
+                    if ( nowX == targetX && nowY == targetY ) continue;
+                    if ( items[targetY][targetX].number == i ) break;
+                    if ( !items[targetY][targetX].able[i] || items[targetY][targetX].number > 0 ){
+                        able_count++;
+                    }
+                }
+            }
+            if ( able_count == 8 ){
+                if ( items[nowY][nowX].able[i] && items[nowY][nowX].number == 0 ){
+                    items[nowY][nowX].number = i;
+                    remove_able(nowX, nowY, items);
+                    return;
+                }
+            }
+        }
+    }
+
     public void calculate_sudoku(int[][] sudoku){
         sudoku_item[][] items = new sudoku_item[9][9];
         for ( int y = 0; y < 9; y++ ) {
@@ -73,6 +148,11 @@ public class OutputSudokuActivity extends Activity {
                     if ( items[y][x].number > 0 ){
                         pre_count++;
                     }
+                }
+            }
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < 9; x++) {
+                    check_only(x, y, items);
                 }
             }
 
