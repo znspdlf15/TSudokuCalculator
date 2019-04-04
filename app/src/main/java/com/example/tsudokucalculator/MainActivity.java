@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         camera_mode_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getApplicationContext(), InputCameraSudokuActivity.class);
+                startActivity(intent);
             }
         });
 
